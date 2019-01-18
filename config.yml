@@ -1,0 +1,27 @@
+title: Enable a workflow with GitHub Actions
+tagline: Enable a workflow with GitHub Actions
+description: Enable a workflow with GitHub Actions
+tags:
+  - GitHub Actions
+  - Workflows
+template:
+  name: actions-workflow
+  repo: actions-workflow-template
+before:
+  - type: updateBranchProtection
+
+  - type: createIssue
+    title: Welcome
+    body: welcome.md
+# Repo artifacts:
+
+steps:
+# 1 pull_request.opened - create a workflow using a single action, branch cleanup
+# 2 check_suite.completed - receive the first status from the action, bot submits approval
+# 3 pull_request.closed - merge the workflow
+# 4 delete - branch is deleted, drop instructions for deployment
+# 5 pull_request.opened - create a second workflow for deployments
+# 6 check_suite.completed - the deployment happened, missing key
+# 7 pull_request.synchronize - add an api key
+# 8 check_suite.completed - the deployment happened, succeeded
+# 9 pull_request.closed - merge the workflow, but no notification exists
