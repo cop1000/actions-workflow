@@ -14,12 +14,93 @@ before:
     title: Welcome
     body: welcome.md
 # Repo artifacts:
+# 1. Issue: Welcome
+# 2. PR: Add branch cleanup workflow
 
 steps:
-# 1 pull_request.opened - create a workflow using a single action, branch cleanup
-# 2 check_suite.completed - receive the first status from the action, bot submits approval
-# 3 pull_request.closed - merge the workflow
-# 4 delete - branch is deleted, drop instructions for deployment
+
+# 1 Create the workflow file 
+- title: Create a workflow file
+  description: Create a workflow file
+  event: pull_request.opened
+  actions:
+  - type: getTree
+    action_id: tree
+    recursive: true
+    sha: '%payload.pull_request.head.sha%'
+  - type: gate
+    left: '%actions.tree.data.tree%'
+    operator: includes
+    right: path:/^.github/main.workflow$/
+    else:
+      type: respond
+      with: e-no-workflow.md
+  - type: respond
+    with: add-action.md
+
+# 2 Add the branch cleanup action
+- title: Add the branch cleanup action
+  description: Add the branch cleanup action
+  event: pull_request.synchronize
+  actions:
+  - type: getTree
+    action_id: tree
+    recursive: true
+    sha: '%payload.pull_request.head.sha%'
+  - type: gate
+    left: '%actions.tree.data.tree%'
+    operator: includes
+    right: path:/^.github/main.workflow$/
+    else:
+      type: respond
+      with: e-no-workflow.md
+  - type: respond
+    with: wait-for-cleanup.md
+
+# 3 Wait for the branch cleanup action to run
+- title: Wait for the branch cleanup action to run
+  description: Wait for the branch cleanup action to run
+  event: check_suite.completed
+  actions:
+  - type: gate
+    left: '%payload.check_suite.app.name%'
+    operator: ===
+    right: GitHub Actions
+  - type: gate
+    left: '%payload.check_suite.conclusion%'
+    operator: ===
+    right: success
+    else:
+    - type: respond
+      issue: '%payload.check_suite.pull_requests.0.number%'
+      with: e-no-run.md
+      data:
+        repo: '%payload.repository.html_url%'
+  - type: createReview
+    pullRequest: '%payload.check_suite.pull_requests.0.number%'
+    body: workflow-success.md
+    event: APPROVE
+    data:
+      repo: '%payload.repository.html_url%'
+
+# 4 title: Run the branch cleanup action
+- title: Run the branch cleanup action
+  description: Run the branch cleanup action
+  event: delete
+  actions: 
+  - type: gate
+    every: true
+    gates:
+    - left: '%payload.ref_type%'
+      operator: ===
+      right: branch
+    - left: '%payload.sender.login%'
+      operator: ===
+      right: github-actions[bot]
+  - type: respond
+    issue: Add branch cleanup workflow
+    with: branch-cleaned-up.md
+
 # 5 pull_request.opened - create a second workflow for deployments
 # 6 check_suite.completed - the deployment happened, missing key
 # 7 pull_request.synchronize - add an api key
