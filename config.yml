@@ -16,6 +16,8 @@ before:
 # Repo artifacts:
 # 1. Issue: Welcome
 # 2. PR: Add branch cleanup workflow
+# 3. Issue: Create a deployment workflow
+# 4. PR: Add deployment workflow
 
 steps:
 
@@ -100,8 +102,71 @@ steps:
   - type: respond
     issue: Add branch cleanup workflow
     with: branch-cleaned-up.md
+  - type: createIssue
+    title: Create a deployment workflow
+    body: deployment-workflow.md
 
-# 5 pull_request.opened - create a second workflow for deployments
+# 5 
+- title: Create a deployment workflow
+  description: Create a deployment workflow
+  event: pull_request.opened
+  actions: 
+  - type: getTree
+    action_id: tree
+    recursive: true
+    sha: '%payload.pull_request.head.sha%'
+  - type: gate
+    left: '%actions.tree.data.tree%'
+    operator: includes
+    right: path:/^.github/main.workflow$/
+    else:
+      type: respond
+      with: e-no-workflow.md
+  - type: respond
+    with: add-secret.md
+
+# 6
+- title: Store a secret on your GitHub repository
+  description: Store a secret on your GitHub repository
+  event: pull_request.synchronize
+  actions:
+  - type: getTree
+    action_id: tree
+    recursive: true
+    sha: '%payload.pull_request.head.sha%'
+  - type: gate
+    left: '%actions.tree.data.tree%'
+    operator: includes
+    right: path:/^.github/main.workflow$/
+    else:
+      type: respond
+      with: e-no-workflow.md
+  - type: respond
+    with: wait-for-deployment.md
+
+# 7 
+- title: Deploy on Zeit Now
+  description: Deploy on Zeit Now
+  event: check_suite.completed
+  actions:
+  - type: gate
+    left: '%payload.check_suite.app.name%'
+    operator: ===
+    right: GitHub Actions
+  - type: gate
+    left: '%payload.check_suite.conclusion%'
+    operator: ===
+    right: success
+    else:
+    - type: respond
+      issue: '%payload.check_suite.pull_requests.0.number%'
+      with: e-no-run.md
+      data:
+        repo: '%payload.repository.html_url%'
+  - type: respond
+    issue: '%payload.check_suite.pull_requests.0.number%'
+    with: deployed.md
+
 # 6 check_suite.completed - the deployment happened, missing key
 # 7 pull_request.synchronize - add an api key
 # 8 check_suite.completed - the deployment happened, succeeded
