@@ -18,9 +18,9 @@ In your open pull request on GitHub:
 1. Click on the **Files changed** tab of this pull request.
 1. Click on the pencil to edit the `main.workflow` file. 
 1. In the `deploy` action block, click on **Edit**.
-1. Drag the connector from the workflow block to the outlined action block for the action.
-1. In the :lock: secrets section click on **Enter value** next to next to :lock: `ZEIT_TOKEN`.
-1. Paste your token from Zeit.
+1. In the :lock: secrets section click on **Create a new secret**.
+1. In the SECRET_KEY field, enter `ZEIT_TOKEN`.
+1. In the Secret value field, paste your token from Zeit.
 1. Click **Add secret**
 1. Click **Done**.
 1. Click **Start commit** on the top right. 

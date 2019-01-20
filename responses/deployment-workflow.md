@@ -1,7 +1,9 @@
 Let's create a deployment workflow. We want to deploy anytime we push, so let's ensure we select the `push` event to trigger the workflow.
 
-1. Click on the **Actions** tab
-1. Click **Create a new workflow**
+1. Click on the **Code** tab
+1. Click **.github**
+1. Click on **main.workflow**.
+1. Click the pencil to edit. 
 1. Click **Edit** in the New workflow block.
 1. Select Run on: **push**
 1. Click **Done**. 
