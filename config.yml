@@ -24,6 +24,7 @@ steps:
 - title: Create a workflow file
   description: Create a workflow file
   event: pull_request.opened
+  link: '{{ repoUrl }}/issues/1'
   actions:
   - type: getTree
     action_id: tree
