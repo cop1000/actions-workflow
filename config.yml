@@ -99,12 +99,15 @@ steps:
     - left: '%payload.sender.login%'
       operator: ===
       right: github-actions[bot]
-  - type: respond
-    issue: Add branch cleanup workflow
-    with: 04.0_branch-cleaned-up.md
   - type: createIssue
     title: Create a deployment workflow
     body: 04.1_deployment-workflow.md
+    action_id: deployIssue
+  - type: respond
+    issue: Add branch cleanup workflow
+    with: 04.0_branch-cleaned-up.md
+    data:
+      url: '%actions.deployIssue.data.html_url%'
 
 # 5
 - title: Create a deployment workflow
