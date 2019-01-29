@@ -1,1 +1,0 @@
-Hey! The branch is cleaned up. Let's go to the next step. 

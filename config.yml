@@ -9,10 +9,9 @@ template:
   repo: actions-workflow-template
 before:
   - type: updateBranchProtection
-
   - type: createIssue
     title: Welcome
-    body: welcome.md
+    body: 00.0_welcome.md
 # Repo artifacts:
 # 1. Issue: Welcome
 # 2. PR: Add branch cleanup workflow
@@ -21,10 +20,11 @@ before:
 
 steps:
 
-# 1 Create the workflow file 
+# 1 Create the workflow file
 - title: Create a workflow file
   description: Create a workflow file
   event: pull_request.opened
+  link: '{{ repoUrl }}/issues/1'
   actions:
   - type: getTree
     action_id: tree
@@ -36,9 +36,9 @@ steps:
     right: path:/^.github/main.workflow$/
     else:
       type: respond
-      with: e-no-workflow.md
+      with: 01.1_e-no-workflow.md
   - type: respond
-    with: add-action.md
+    with: 01.0_add-action.md
 
 # 2 Add the branch cleanup action
 - title: Add the branch cleanup action
@@ -55,9 +55,9 @@ steps:
     right: path:/^.github/main.workflow$/
     else:
       type: respond
-      with: e-no-workflow.md
+      with: 01.1_e-no-workflow.md
   - type: respond
-    with: wait-for-cleanup.md
+    with: 02.0_wait-for-cleanup.md
 
 # 3 Wait for the branch cleanup action to run
 - title: Wait for the branch cleanup action to run
@@ -75,12 +75,12 @@ steps:
     else:
     - type: respond
       issue: '%payload.check_suite.pull_requests.0.number%'
-      with: e-no-run.md
+      with: 03.1_e-no-run.md
       data:
         repo: '%payload.repository.html_url%'
   - type: createReview
     pullRequest: '%payload.check_suite.pull_requests.0.number%'
-    body: workflow-success.md
+    body: 03.0_workflow-success.md
     event: APPROVE
     data:
       repo: '%payload.repository.html_url%'
@@ -89,7 +89,7 @@ steps:
 - title: Run the branch cleanup action
   description: Run the branch cleanup action
   event: delete
-  actions: 
+  actions:
   - type: gate
     every: true
     gates:
@@ -99,18 +99,21 @@ steps:
     - left: '%payload.sender.login%'
       operator: ===
       right: github-actions[bot]
-  - type: respond
-    issue: Add branch cleanup workflow
-    with: branch-cleaned-up.md
   - type: createIssue
     title: Create a deployment workflow
-    body: deployment-workflow.md
+    body: 04.1_deployment-workflow.md
+    action_id: deployIssue
+  - type: respond
+    issue: Add branch cleanup workflow
+    with: 04.0_branch-cleaned-up.md
+    data:
+      url: '%actions.deployIssue.data.html_url%'
 
-# 5 
+# 5
 - title: Create a deployment workflow
   description: Create a deployment workflow
   event: pull_request.opened
-  actions: 
+  actions:
   - type: getTree
     action_id: tree
     recursive: true
@@ -121,9 +124,9 @@ steps:
     right: path:/^.github/main.workflow$/
     else:
       type: respond
-      with: e-no-workflow.md
+      with: 01.1_e-no-workflow.md
   - type: respond
-    with: add-secret.md
+    with: 05.0_add-secret.md
 
 # 6
 - title: Store a secret on your GitHub repository
@@ -140,11 +143,11 @@ steps:
     right: path:/^.github/main.workflow$/
     else:
       type: respond
-      with: e-no-workflow.md
+      with: 01.1_e-no-workflow.md
   - type: respond
-    with: wait-for-deployment.md
+    with: 06.0_wait-for-deployment.md
 
-# 7 
+# 7
 - title: Deploy on Zeit Now
   description: Deploy on Zeit Now
   event: check_run.completed
@@ -160,12 +163,12 @@ steps:
     else:
     - type: respond
       issue: '%payload.check_run.pull_requests.0.number%'
-      with: e-no-run.md
+      with: 03.1_e-no-run.md
       data:
         repo: '%payload.repository.html_url%'
   - type: respond
     issue: '%payload.check_suite.pull_requests.0.number%'
-    with: deployed.md
+    with: 07.0_deployed.md
 
 # 6 check_suite.completed - the deployment happened, missing key
 # 7 pull_request.synchronize - add an api key
