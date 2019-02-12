@@ -170,7 +170,22 @@ steps:
     issue: '%payload.check_suite.pull_requests.0.number%'
     with: 07.0_deployed.md
 
-# 6 check_suite.completed - the deployment happened, missing key
-# 7 pull_request.synchronize - add an api key
-# 8 check_suite.completed - the deployment happened, succeeded
-# 9 pull_request.closed - merge the workflow, but no notification exists
+# 8 Pass environment variables to the action
+#   learner adds: -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR
+- title: Pass arguments to the action
+  description: Pass arguments to the action
+  event: pull_request.opened
+  actions:
+  - left: 
+
+# 9 Access the runtime environment for an action
+#   learner adds the alias action
+
+# 10 Use arguments with an action
+#   learner adds the deploy > deploy.txt argument to deploy action (accessed by alias)
+#   learner adds the alias argument to the alias action
+
+# 11 Notify your phone of a deployment
+#   learner adds nexmo/sms action
+#   learner sets environment variables
+#   learner sets arguments
