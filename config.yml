@@ -19,10 +19,11 @@ before:
 # 3. Issue: Create a deployment workflow
 # 4. PR: Add deployment workflow
 # 5. Issue: Improve the deployment workflow
+# 6. PR: Improve the deployment workflow
 
 steps:
 
-# 1 Create the workflow file
+# 1
 - title: Create a workflow file
   description: Create a workflow file
   event: pull_request.opened
@@ -42,7 +43,7 @@ steps:
   - type: respond
     with: 01.0_add-action.md
 
-# 2 Add the branch cleanup action
+# 2
 - title: Add the branch cleanup action
   description: Add the branch cleanup action
   event: pull_request.synchronize
@@ -64,7 +65,7 @@ steps:
     data:
       repo: '%payload.repository.html_url%'
 
-# 4 title: Run the branch cleanup action
+# 3
 - title: Run the branch cleanup action
   description: Run the branch cleanup action
   event: delete
@@ -88,7 +89,7 @@ steps:
     data:
       url: '%actions.deployIssue.data.html_url%'
 
-# 5
+# 4
 - title: Create a deployment workflow
   description: Create a deployment workflow
   event: pull_request.opened
@@ -107,7 +108,7 @@ steps:
   - type: respond
     with: 05.0_add-secret.md
 
-# 6
+# 5
 - title: Store a secret on your GitHub repository
   description: Store a secret on your GitHub repository
   event: pull_request.synchronize
@@ -126,7 +127,7 @@ steps:
   - type: respond
     with: 06.0_wait-for-deployment.md
 
-# 7
+# 6
 - title: Deploy on Zeit Now
   description: Deploy on Zeit Now
   event: check_run.completed
@@ -151,7 +152,7 @@ steps:
     event: APPROVE
     pullRequest: '%payload.check_run.pull_requests.0.number%'
 
-# 8
+# 7
 - title: Merge the deployment pull request
   description: Merge the deployment pull request
   event: pull_request.closed
@@ -167,7 +168,7 @@ steps:
     data:
       url: '%actions.improvementIssue.data.html_url%'
 
-# 9 
+# 8
 - title: Pass arguments to the action
   description: Pass arguments to the action
   event: pull_request.opened
@@ -175,7 +176,7 @@ steps:
   - type: respond
     with: explain-args.md
 
-# 10
+# 9
 - title: Chain actions in a workflow
   description: Chain actions in a workflow
   event: pull_request.synchronize
@@ -183,7 +184,7 @@ steps:
   - type: respond
     with: capture-url.md
 
-# 11
+# 10
 - title: Capture the output from an existing action
   description: Capture the output from an existing action
   event: pull_request.synchronize
@@ -191,7 +192,7 @@ steps:
   - type: respond
     with: alias-url.md
 
-#12
+#11
 - title: Alias the deployment
   description: Alias the deployment
   event: pull_request.synchronize
