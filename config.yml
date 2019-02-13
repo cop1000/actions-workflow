@@ -20,6 +20,8 @@ before:
 # 4. PR: Add deployment workflow
 # 5. Issue: Improve the deployment workflow
 # 6. PR: Improve the deployment workflow
+# 7. Issue: Notify on deployment
+# 8. PR: Add deployment notification
 
 steps:
 
@@ -197,9 +199,29 @@ steps:
   description: Alias the deployment
   event: pull_request.synchronize
   actions:
-  - type: respond
-    with: placeholder.md
+  - type: createReview
+    body: deployed-and-aliased.md
+    event: APPROVE
+    data:
+      url: 'https://%payload.after%.now.sh/'
 
+#12
+- title: Merge your improved deployment workflow
+  description: Merged your improved deployment workflow
+  event: pull_request.closed
+  actions:
+  - type: gate
+    left: '%payload.pull_request.merged%'
+  - type: createIssue
+    title: Notify on deployment
+    body: notify.md
+    action_id: improvementIssue
+  - type: respond
+    with: goto-improvement.md
+    data:
+      url: '%actions.improvementIssue.data.html_url%'
+
+    
 
 
 # 9 Access the runtime environment for an action
