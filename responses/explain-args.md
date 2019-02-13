@@ -6,7 +6,7 @@ When an action runs, some [environment variables are set by GitHub](https://deve
 
 If you examine our newly deployed app, you'll now see that it looks something like this:
 
-![screenshot of deployed web app with confetti(https://user-images.githubusercontent.com/16547949/52747405-b1c97e80-2fb1-11e9-924c-70fb3a37ce14.png)
+![screenshot of deployed web app with confetti](https://user-images.githubusercontent.com/16547949/52747405-b1c97e80-2fb1-11e9-924c-70fb3a37ce14.png)
 
 By now, you must be getting pretty tired of digging into the Actions tab to get the deployment URL. Let's use another feature of the Zeit Now action: [alias](https://zeit.co/docs/v1/features/aliases).
 

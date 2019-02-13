@@ -1,4 +1,4 @@
-It's not time to improve the deployment workflow. The first thing we'll do is capture the output from the deployment action we already merged.
+It's now time to improve the deployment workflow. The first thing we'll do is capture the output from the deployment action we already merged.
 
 ### :keyboard: Activity: Capture an action's output
 
