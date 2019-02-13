@@ -188,7 +188,16 @@ steps:
   event: pull_request.synchronize
   actions:
   - type: respond
+    with: alias-url.md
+
+#12
+- title: Alias the deployment
+  description: Alias the deployment
+  event: pull_request.synchronize
+  actions:
+  - type: respond
     with: placeholder.md
+
 
 
 # 9 Access the runtime environment for an action

@@ -18,7 +18,8 @@ By now, you must be getting pretty tired of digging into the Actions tab to get 
 1. Drag the connector from the deployment action block to the outlined action block for a new action
 1. In the Choose action field, type `actions/zeit-now@master` once again
 1. Click **Use**
-1. In the label field, type `alias`
+1. In the **label** field, type `alias`
+1. In the **args** field, type `alias`
 1. In the :lock: secrets section, check `ZEIT_TOKEN`.
 1. Click **Done**.
 1. Click **Start commit** on the top right.
