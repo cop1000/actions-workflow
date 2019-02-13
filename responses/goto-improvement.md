@@ -1,0 +1,1 @@
+Great! Let's go to the [next issue]({{ url }}).

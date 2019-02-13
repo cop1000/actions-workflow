@@ -159,6 +159,11 @@ steps:
   - type: createIssue
     title: Improve the deployment function
     body: improve-deployment.md
+    action_id: improvementIssue
+  - type: respond
+    with: goto-improvement.md
+    data:
+      url: '%actions.improvementIssue.data.html_url%'
 # 8 Pass environment variables to the action
 #   learner adds: -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR
 # - title: Pass arguments to the action
