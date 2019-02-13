@@ -12,6 +12,7 @@ before:
   - type: createIssue
     title: Welcome
     body: 00.0_welcome.md
+    
 # Repo artifacts:
 # 1. Issue: Welcome
 # 2. PR: Add branch cleanup workflow
@@ -56,31 +57,8 @@ steps:
     else:
       type: respond
       with: 01.1_e-no-workflow.md
-  - type: respond
-    with: 02.0_wait-for-cleanup.md
-
-# 3 Wait for the branch cleanup action to run
-- title: Wait for the branch cleanup action to run
-  description: Wait for the branch cleanup action to run
-  event: check_suite.completed
-  actions:
-  - type: gate
-    left: '%payload.check_suite.app.name%'
-    operator: ===
-    right: GitHub Actions
-  - type: gate
-    left: '%payload.check_suite.conclusion%'
-    operator: ===
-    right: success
-    else:
-    - type: respond
-      issue: '%payload.check_suite.pull_requests.0.number%'
-      with: 03.1_e-no-run.md
-      data:
-        repo: '%payload.repository.html_url%'
   - type: createReview
-    pullRequest: '%payload.check_suite.pull_requests.0.number%'
-    body: 03.0_workflow-success.md
+    body: 02.0_wait-for-cleanup.md
     event: APPROVE
     data:
       repo: '%payload.repository.html_url%'
@@ -172,11 +150,11 @@ steps:
 
 # 8 Pass environment variables to the action
 #   learner adds: -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR
-- title: Pass arguments to the action
-  description: Pass arguments to the action
-  event: pull_request.opened
-  actions:
-  - left: 
+# - title: Pass arguments to the action
+#   description: Pass arguments to the action
+#   event: pull_request.opened
+#   actions:
+#   - left: 
 
 # 9 Access the runtime environment for an action
 #   learner adds the alias action
