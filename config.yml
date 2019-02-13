@@ -166,13 +166,30 @@ steps:
     data:
       url: '%actions.improvementIssue.data.html_url%'
 
-# 8 Pass environment variables to the action
-#   learner adds: -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR
-# - title: Pass arguments to the action
-#   description: Pass arguments to the action
-#   event: pull_request.opened
-#   actions:
-#   - left: 
+# 9 
+- title: Pass arguments to the action
+  description: Pass arguments to the action
+  event: pull_request.opened
+  actions:
+  - type: respond
+    with: explain-args.md
+
+# 10
+- title: Chain actions in a workflow
+  description: Chain actions in a workflow
+  event: pull_request.synchronize
+  actions:
+  - type: respond
+    with: capture-url.md
+
+# 11
+- title: Capture the output from an existing action
+  description: Capture the output from an existing action
+  event: pull_request.synchronize
+  actions:
+  - type: respond
+    with: placeholder.md
+
 
 # 9 Access the runtime environment for an action
 #   learner adds the alias action

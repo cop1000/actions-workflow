@@ -7,7 +7,8 @@ It's not time to improve the deployment workflow. The first thing we'll do is ca
 1. Click on **main.workflow**
 1. Click the pencil to edit
 1. On the side bar, select your deployment workflow.
-1. In the zeit-now action, enter the following in the `args` field: `deploy > deploy.txt`
+1. Click **edit** in the zeit-now action.
+1. In the **args** field, enter: `-e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR`
 1. Click **Done**
 1. Click **Start commit** on the top right
 1. Enter a commit message, select Create a new branch, and click **Commit new file**
