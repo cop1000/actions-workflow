@@ -9,7 +9,7 @@ We've now captured the output from the deployment action, although we can't see 
 1. In the **args** field, add <code>\`cat deploy.txt\` $GITHUB_SHA</code>.
     - Remember that this field previously contained `alias`, so the complete arguments will be:
     ```shell
-    alias \`cat deploy.txt\` $GITHUB_SHA
+    alias `cat deploy.txt` $GITHUB_SHA
     ```
 1. Click **Done**.
 1. Click **Start commit** on the top right.
