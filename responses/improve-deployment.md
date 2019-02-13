@@ -1,6 +1,6 @@
-It's now time to improve the deployment workflow. The first thing we'll do is capture the output from the deployment action we already merged.
+It's now time to improve the deployment workflow. The first thing we'll do is pass data to our deployment. We can do this using the `args` field, which lets us set arguments for the action.
 
-### :keyboard: Activity: Capture an action's output
+### :keyboard: Activity: Use environment variables as part of an action
 
 1. Click on the **Code** tab
 1. Click **.github**

@@ -9,7 +9,10 @@ When the deployment action runs, you may have noticed that it returns the deploy
 1. On the side bar, select your deployment workflow.
 1. Click **edit** in your deployment action.
 1. In the **args** field, add `deploy > deploy.txt`.
-    - Remember that we've previously used this field to pass in the runtime environment variables. You'll want to leave those in place, so the complete arguments will be: `-e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR deploy > deploy.txt`
+    - Remember that we've previously used this field to pass in the runtime environment variables. You'll want to leave those in place, so the complete arguments will be:
+    ```shell
+    -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR deploy > deploy.txt
+    ```
 1. Click **Done**.
 1. Click **Start commit** on the top right.
 1. Enter a commit message.
