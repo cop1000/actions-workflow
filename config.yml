@@ -145,9 +145,10 @@ steps:
       with: 03.1_e-no-run.md
       data:
         repo: '%payload.repository.html_url%'
-  - type: respond
-    issue: '%payload.check_run.pull_requests.0.number%'
-    with: 07.0_deployed.md
+  - type: createReview
+    body: 07.0_deployed.md
+    event: APPROVE
+    pullRequest: '%payload.check_run.pull_requests.0.number%'
 
 # 8
 - title: Merge the deployment pull request
@@ -164,6 +165,7 @@ steps:
     with: goto-improvement.md
     data:
       url: '%actions.improvementIssue.data.html_url%'
+
 # 8 Pass environment variables to the action
 #   learner adds: -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR
 # - title: Pass arguments to the action
