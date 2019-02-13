@@ -221,6 +221,26 @@ steps:
     data:
       url: '%actions.improvementIssue.data.html_url%'
 
+# 13
+- title: Send a deployment notification
+  description: Send a deployment notification
+  event: pull_request.opened
+  actions:
+  - type: createReview
+    body: notified.md
+    event: APPROVE
+
+# 14
+- title: Merge the deployment notification
+  description: Merge the deployment notification
+  event: pull_request.closed
+  actions:
+  - type: gate
+    left: '%payload.pull_request.merged%'
+  - type: createIssue
+    title: Congratulations
+    body: congratulations.md
+
     
 
 

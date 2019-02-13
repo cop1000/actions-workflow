@@ -2,7 +2,7 @@ One of the best things about defining workflow with GitHub Actions is the abilit
 
 We'll let you do this one mostly on your own and we'll check in at the end.
 
-### :keyboard: Activity: Use environment variables as part of an action
+### :keyboard: Activity: Use an action to send an SMS notification on deployment
 
 1. Click on the **Code** tab
 1. Click **.github**
