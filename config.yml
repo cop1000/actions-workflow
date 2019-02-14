@@ -138,8 +138,29 @@ steps:
 # 4
 - title: Create a deployment workflow
   description: Create a deployment workflow
-  event: pull_request.opened
+  event: pull_request
   actions:
+  - type: gate
+    gates:
+    - left: '%payload.action%'
+      operator: ===
+      right: opened
+    - left: '%payload.action%'
+      operator: ===
+      right: edited
+    - left: '%payload.action%'
+      operator: ===
+      right: synchronize
+  - type: gate
+    left: '%payload.pull_request.title%'
+    operator: ===
+    right: Add deployment workflow
+    else:
+    - type: respond
+      with: e-pr-title.md
+      data:
+        expected: Add deployment workflow
+        got: '%payload.pull_request.title%'
   - type: getTree
     action_id: tree
     recursive: true
@@ -151,6 +172,18 @@ steps:
     else:
       type: respond
       with: 01.1_e-no-workflow.md
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: 'uses = "actions/zeit-now@master"'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-wrong-action.md
+      data:
+        expected: actions/zeit-now@master
   - type: respond
     with: 05.0_add-secret.md
 
