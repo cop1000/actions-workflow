@@ -87,6 +87,18 @@ steps:
     left: '%payload.pull_request.title%'
     operator: ===
     right: Add branch cleanup workflow
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: 'uses = "jessfraz/branch-cleanup-action@master"'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-wrong-action.md
+      data:
+        expected: jessfraz/branch-cleanup-action@master
   - type: respond
     with: 02.0_wait-for-cleanup.md
 
