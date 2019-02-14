@@ -321,6 +321,18 @@ steps:
   description: Capture the output from an existing action
   event: pull_request.synchronize
   actions:
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: '/args\s*=\s*"-e GITHUB_SHA=\$GITHUB_SHA -e GITHUB_ACTOR=\$GITHUB_ACTOR deploy > deploy\.txt"/g'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-bad-args.md
+      data:
+        expected: args = "-e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR deploy > deploy.txt"
   - type: respond
     with: alias-url.md
 
@@ -329,6 +341,18 @@ steps:
   description: Alias the deployment
   event: pull_request.synchronize
   actions:
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: '/args = "alias `cat deploy.txt` $GITHUB_SHA"/g'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-bad-args.md
+      data:
+        expected: args = "alias `cat deploy.txt` $GITHUB_SHA"
   - type: createReview
     body: deployed-and-aliased.md
     event: APPROVE
