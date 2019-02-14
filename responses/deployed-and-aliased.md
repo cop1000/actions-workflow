@@ -1,10 +1,8 @@
-Your app is now deployed and aliased!
+Your app is now has a workflow that deploys and aliases it!
 
 Because we used the commit SHA for the deployment, we can now predict that this deployment is available at: {{ url }}
 
-### :keyboard: Activity: Merge your pull request
-
-1. Merge your pull request.
+Let's wait for the deployment.
 
 <hr>
-<h3 align="center">I'll respond when this pull request is merged.</h3>
+<h3 align="center">I'll respond when I receive a response from Zeit about the deployment.</h3>

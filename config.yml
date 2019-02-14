@@ -361,10 +361,9 @@ steps:
     - type: respond
       with: e-bad-args.md
       data:
-        expected: alias `cat deploy.txt` $GITHUB_SHA
-  - type: createReview
-    body: deployed-and-aliased.md
-    event: APPROVE
+        expected: alias \`cat deploy.txt\` $GITHUB_SHA
+  - type: respond
+    with: deployed-and-aliased.md
     data:
       url: 'https://%payload.after%.now.sh/'
 
