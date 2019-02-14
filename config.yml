@@ -258,8 +258,41 @@ steps:
 # 8
 - title: Pass arguments to the action
   description: Pass arguments to the action
-  event: pull_request.opened
+  event: pull_request
   actions:
+  - type: gate
+    gates:
+    - left: '%payload.action%'
+      operator: ===
+      right: opened
+    - left: '%payload.action%'
+      operator: ===
+      right: edited
+    - left: '%payload.action%'
+      operator: ===
+      right: synchronize
+  - type: gate
+    left: '%payload.pull_request.title%'
+    operator: ===
+    right: Improve the deployment workflow
+    else:
+    - type: respond
+      with: e-pr-title.md
+      data:
+        expected: Improve the deployment workflow
+        got: '%payload.pull_request.title%'
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: '/args\s*=\s*"-e GITHUB_SHA=\$GITHUB_SHA -e GITHUB_ACTOR=\$GITHUB_ACTOR"/g'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-bad-args.md
+      data:
+        expected: args = "-e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR"
   - type: respond
     with: explain-args.md
 
