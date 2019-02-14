@@ -83,44 +83,38 @@ steps:
   description: Add the branch cleanup action
   event: pull_request.synchronize
   actions:
-  - type: getTree
-    action_id: tree
-    recursive: true
-    sha: '%payload.pull_request.head.sha%'
   - type: gate
-    left: '%actions.tree.data.tree%'
-    operator: includes
-    right: path:/^.github/main.workflow$/
-    else:
-      type: respond
-      with: 01.1_e-no-workflow.md
-  - type: createReview
-    body: 02.0_wait-for-cleanup.md
-    event: APPROVE
-    data:
-      repo: '%payload.repository.html_url%'
+    left: '%payload.pull_request.title%'
+    operator: ===
+    right: Add branch cleanup workflow
+  - type: respond
+    with: 02.0_wait-for-cleanup.md
 
 # 3
 - title: Run the branch cleanup action
   description: Run the branch cleanup action
-  event: delete
+  event: check_run.completed
   actions:
   - type: gate
     every: true
     gates:
-    - left: '%payload.ref_type%'
+    - left: '%payload.check_run.external_id%'
       operator: ===
-      right: branch
-    - left: '%payload.sender.login%'
+      right: jessfraz/branch-cleanup-action@master
+    - left: '%payload.check_run.status%'
       operator: ===
-      right: github-actions[bot]
+      right: compeleted
+    - left: '%payload.check_run.conclusion%'
+      operator: ===
+      right: success
   - type: createIssue
     title: Create a deployment workflow
     body: 04.1_deployment-workflow.md
     action_id: deployIssue
-  - type: respond
-    issue: Add branch cleanup workflow
-    with: 04.0_branch-cleaned-up.md
+  - type: createReview
+    pullRequest: Add branch cleanup workflow
+    body: 04.0_branch-cleaned-up.md
+    event: APPROVE
     data:
       url: '%actions.deployIssue.data.html_url%'
 
