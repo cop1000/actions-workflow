@@ -122,6 +122,7 @@ steps:
     right: success
     else:
     - type: respond
+      issue: Add branch cleanup workflow
       with: e-action-didnt-run.md
   - type: createIssue
     title: Create a deployment workflow
