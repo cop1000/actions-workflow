@@ -391,6 +391,10 @@ steps:
     - type: respond
       issue: Improve the deployment workflow
       with: e-action-didnt-run.md
+  - type: createReview
+    body: merge-aliased.md
+    event: APPROVE
+    pullRequest: Improve the deployment workflow
 
 
 #12
