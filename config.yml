@@ -28,9 +28,27 @@ steps:
 # 1
 - title: Create a workflow file
   description: Create a workflow file
-  event: pull_request.opened
+  event: pull_request
   link: '{{ repoUrl }}/issues/1'
   actions:
+  - type: gate
+    gates:
+    - left: '%payload.action%'
+      operator: ===
+      right: opened
+    - left: '%payload.action%'
+      operator: ===
+      right: edited
+  - type: gate
+    left: '%payload.pull_request.title'
+    operator: ===
+    right: Add branch cleanup workflow
+    else:
+    - type: respond
+      with: e-pr-title.md
+      data:
+        expected: Add branch cleanup workflow
+        got: '%payload.pull_request.title%'
   - type: getTree
     action_id: tree
     recursive: true
