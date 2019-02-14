@@ -60,6 +60,18 @@ steps:
     else:
       type: respond
       with: 01.1_e-no-workflow.md
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: 'on = "pull_request"'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-event.md
+      data:
+        expected: pull_request
   - type: respond
     with: 01.0_add-action.md
 
