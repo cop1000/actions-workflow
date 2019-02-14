@@ -305,6 +305,15 @@ steps:
     action_id: fileContents
     filename: '.github/main.workflow'
   - type: gate
+    left: 'action "alias"'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-expected-label.md
+      data:
+        expected: alias
+  - type: gate
     left: '/args\s*=\s*"alias"/g'
     operator: test
     right: '%actions.fileContents%'
@@ -358,6 +367,29 @@ steps:
     event: APPROVE
     data:
       url: 'https://%payload.after%.now.sh/'
+
+- title: Run the aliased deployment
+  description: Run the aliased deployment
+  event: check_run.completed
+  actions:
+  - type: gate
+    every: true
+    gates:
+    - left: '%payload.check_run.external_id%'
+      operator: ===
+      right: actions/zeit-now@master
+    - left: '%payload.check_run.status%'
+      operator: ===
+      right: completed
+  - type: gate
+    left: '%payload.check_run.conclusion%'
+    operator: ===
+    right: success
+    else:
+    - type: respond
+      issue: Add branch cleanup workflow
+      with: e-action-didnt-run.md
+
 
 #12
 - title: Merge your improved deployment workflow
