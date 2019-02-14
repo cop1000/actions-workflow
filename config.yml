@@ -292,7 +292,7 @@ steps:
     - type: respond
       with: e-bad-args.md
       data:
-        expected: args = "-e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR"
+        expected: -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR
   - type: respond
     with: explain-args.md
 
@@ -321,7 +321,7 @@ steps:
     - type: respond
       with: e-bad-args.md
       data:
-        expected: args = "alias"
+        expected: alias
   - type: respond
     with: capture-url.md
 
@@ -341,7 +341,7 @@ steps:
     - type: respond
       with: e-bad-args.md
       data:
-        expected: args = "-e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR deploy > deploy.txt"
+        expected: -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR deploy > deploy.txt
   - type: respond
     with: alias-url.md
 
@@ -361,7 +361,7 @@ steps:
     - type: respond
       with: e-bad-args.md
       data:
-        expected: args = "alias `cat deploy.txt` $GITHUB_SHA"
+        expected: alias `cat deploy.txt` $GITHUB_SHA
   - type: createReview
     body: deployed-and-aliased.md
     event: APPROVE
