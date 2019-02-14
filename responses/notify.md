@@ -17,7 +17,7 @@ We'll let you do this one mostly on your own and we'll check in at the end.
     - `NEXMO_API_KEY`: the API key provided to you by Nexmo
     - `NEXMO_API_SECRET`: the API secret provided to you by Nexmo
     - `NEXMO_NUMBER`: the phone number provided to you by Nexmo
-    - `NUMBER`: your phone number, the number you wish to notify
+    - `PHONE`: your phone number, the number you wish to notify
 1. In the **args** field we'll enter the body of the message, I suggest:
     ```
     $PHONE 🚀 A deployment just ocurred at https://$GITHUB_SHA.now.sh/
