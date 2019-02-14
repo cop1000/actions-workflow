@@ -381,13 +381,16 @@ steps:
     - left: '%payload.check_run.status%'
       operator: ===
       right: completed
+    - left: '%payload.check_run.name%'
+      operator: ===
+      right: alias # we validated this in an earlier step
   - type: gate
     left: '%payload.check_run.conclusion%'
     operator: ===
     right: success
     else:
     - type: respond
-      issue: Add branch cleanup workflow
+      issue: Improve the deployment workflow
       with: e-action-didnt-run.md
 
 
