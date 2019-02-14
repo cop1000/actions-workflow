@@ -39,6 +39,9 @@ steps:
     - left: '%payload.action%'
       operator: ===
       right: edited
+    - left: '%payload.action%'
+      operator: ===
+      right: synchronize
   - type: gate
     left: '%payload.pull_request.title%'
     operator: ===
