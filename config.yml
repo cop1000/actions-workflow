@@ -28,9 +28,30 @@ steps:
 # 1
 - title: Create a workflow file
   description: Create a workflow file
-  event: pull_request.opened
+  event: pull_request
   link: '{{ repoUrl }}/issues/1'
   actions:
+  - type: gate
+    gates:
+    - left: '%payload.action%'
+      operator: ===
+      right: opened
+    - left: '%payload.action%'
+      operator: ===
+      right: edited
+    - left: '%payload.action%'
+      operator: ===
+      right: synchronize
+  - type: gate
+    left: '%payload.pull_request.title%'
+    operator: ===
+    right: Add branch cleanup workflow
+    else:
+    - type: respond
+      with: e-pr-title.md
+      data:
+        expected: Add branch cleanup workflow
+        got: '%payload.pull_request.title%'
   - type: getTree
     action_id: tree
     recursive: true
@@ -42,6 +63,18 @@ steps:
     else:
       type: respond
       with: 01.1_e-no-workflow.md
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: 'on = "pull_request"'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-event.md
+      data:
+        expected: pull_request
   - type: respond
     with: 01.0_add-action.md
 
@@ -50,52 +83,89 @@ steps:
   description: Add the branch cleanup action
   event: pull_request.synchronize
   actions:
-  - type: getTree
-    action_id: tree
-    recursive: true
-    sha: '%payload.pull_request.head.sha%'
   - type: gate
-    left: '%actions.tree.data.tree%'
-    operator: includes
-    right: path:/^.github/main.workflow$/
+    left: '%payload.pull_request.title%'
+    operator: ===
+    right: Add branch cleanup workflow
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: 'uses = "jessfraz/branch-cleanup-action@master"'
+    operator: test
+    right: '%actions.fileContents%'
     else:
-      type: respond
-      with: 01.1_e-no-workflow.md
-  - type: createReview
-    body: 02.0_wait-for-cleanup.md
-    event: APPROVE
-    data:
-      repo: '%payload.repository.html_url%'
+    - type: respond
+      with: e-wrong-action.md
+      data:
+        expected: jessfraz/branch-cleanup-action@master
+  - type: respond
+    with: 02.0_wait-for-cleanup.md
 
 # 3
 - title: Run the branch cleanup action
   description: Run the branch cleanup action
-  event: delete
+  # this check_run is safe since the PR would've been opened long ago
+  event: check_run.completed
   actions:
   - type: gate
     every: true
     gates:
-    - left: '%payload.ref_type%'
+    - left: '%payload.check_run.external_id%'
       operator: ===
-      right: branch
-    - left: '%payload.sender.login%'
+      right: jessfraz/branch-cleanup-action@master
+    - left: '%payload.check_run.status%'
       operator: ===
-      right: github-actions[bot]
+      right: completed
+  - type: gate
+    gates:
+    - left: '%payload.check_run.conclusion%'
+      operator: ===
+      right: success
+    - left: '%payload.check_run.conclusion%'
+      operator: ===
+      right: neutral
+    else:
+    - type: respond
+      issue: Add branch cleanup workflow
+      with: e-action-didnt-run.md
   - type: createIssue
     title: Create a deployment workflow
     body: 04.1_deployment-workflow.md
     action_id: deployIssue
-  - type: respond
-    issue: Add branch cleanup workflow
-    with: 04.0_branch-cleaned-up.md
+  - type: createReview
+    pullRequest: Add branch cleanup workflow
+    body: 04.0_branch-cleaned-up.md
+    event: APPROVE
     data:
       url: '%actions.deployIssue.data.html_url%'
 
 # 4
 - title: Create a deployment workflow
   description: Create a deployment workflow
-  event: pull_request.opened
+  event: pull_request
   actions:
+  - type: gate
+    gates:
+    - left: '%payload.action%'
+      operator: ===
+      right: opened
+    - left: '%payload.action%'
+      operator: ===
+      right: edited
+    - left: '%payload.action%'
+      operator: ===
+      right: synchronize
+  - type: gate
+    left: '%payload.pull_request.title%'
+    operator: ===
+    right: Add deployment workflow
+    else:
+    - type: respond
+      with: e-pr-title.md
+      data:
+        expected: Add deployment workflow
+        got: '%payload.pull_request.title%'
   - type: getTree
     action_id: tree
     recursive: true
@@ -107,6 +177,18 @@ steps:
     else:
       type: respond
       with: 01.1_e-no-workflow.md
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: 'uses = "actions/zeit-now@master"'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-wrong-action.md
+      data:
+        expected: actions/zeit-now@master
   - type: respond
     with: 05.0_add-secret.md
 
@@ -115,17 +197,18 @@ steps:
   description: Store a secret on your GitHub repository
   event: pull_request.synchronize
   actions:
-  - type: getTree
-    action_id: tree
-    recursive: true
-    sha: '%payload.pull_request.head.sha%'
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
   - type: gate
-    left: '%actions.tree.data.tree%'
-    operator: includes
-    right: path:/^.github/main.workflow$/
+    left: '/secrets\s*=\s*\[\s*"ZEIT_TOKEN",*\s*\]/g'
+    operator: test
+    right: '%actions.fileContents%'
     else:
-      type: respond
-      with: 01.1_e-no-workflow.md
+    - type: respond
+      with: e-no-token.md
+      data:
+        expected: ZEIT_TOKEN
   - type: respond
     with: 06.0_wait-for-deployment.md
 
@@ -135,24 +218,26 @@ steps:
   event: check_run.completed
   actions:
   - type: gate
-    left: '%payload.check_run.external_id%'
-    operator: ===
-    right: actions/zeit-now@master
-    # TODO: use multiple gates and don't act on pending checks
+    every: true
+    gates:
+    - left: '%payload.check_run.external_id%'
+      operator: ===
+      right: actions/zeit-now@master
+    - left: '%payload.check_run.status%'
+      operator: ===
+      right: completed
   - type: gate
     left: '%payload.check_run.conclusion%'
     operator: ===
     right: success
     else:
     - type: respond
-      issue: '%payload.check_run.pull_requests.0.number%'
-      with: 03.1_e-no-run.md
-      data:
-        repo: '%payload.repository.html_url%'
+      issue: Add branch cleanup workflow
+      with: e-action-didnt-run.md
   - type: createReview
     body: 07.0_deployed.md
     event: APPROVE
-    pullRequest: '%payload.check_run.pull_requests.0.number%'
+    pullRequest: Add deployment workflow
 
 # 7
 - title: Merge the deployment pull request
@@ -173,8 +258,41 @@ steps:
 # 8
 - title: Pass arguments to the action
   description: Pass arguments to the action
-  event: pull_request.opened
+  event: pull_request
   actions:
+  - type: gate
+    gates:
+    - left: '%payload.action%'
+      operator: ===
+      right: opened
+    - left: '%payload.action%'
+      operator: ===
+      right: edited
+    - left: '%payload.action%'
+      operator: ===
+      right: synchronize
+  - type: gate
+    left: '%payload.pull_request.title%'
+    operator: ===
+    right: Improve the deployment workflow
+    else:
+    - type: respond
+      with: e-pr-title.md
+      data:
+        expected: Improve the deployment workflow
+        got: '%payload.pull_request.title%'
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: '/args\s*=\s*"-e GITHUB_SHA=\$GITHUB_SHA -e GITHUB_ACTOR=\$GITHUB_ACTOR"/g'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-bad-args.md
+      data:
+        expected: -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR
   - type: respond
     with: explain-args.md
 
@@ -183,6 +301,27 @@ steps:
   description: Chain actions in a workflow
   event: pull_request.synchronize
   actions:
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: 'action "alias"'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-expected-label.md
+      data:
+        expected: alias
+  - type: gate
+    left: '/args\s*=\s*"alias"/g'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-bad-args.md
+      data:
+        expected: alias
   - type: respond
     with: capture-url.md
 
@@ -191,6 +330,18 @@ steps:
   description: Capture the output from an existing action
   event: pull_request.synchronize
   actions:
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: '/args\s*=\s*"-e GITHUB_SHA=\$GITHUB_SHA -e GITHUB_ACTOR=\$GITHUB_ACTOR deploy > deploy\.txt"/g'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-bad-args.md
+      data:
+        expected: -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR deploy > deploy.txt
   - type: respond
     with: alias-url.md
 
@@ -199,11 +350,52 @@ steps:
   description: Alias the deployment
   event: pull_request.synchronize
   actions:
-  - type: createReview
-    body: deployed-and-aliased.md
-    event: APPROVE
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: '/args = "alias `cat deploy.txt` \$GITHUB_SHA"/g'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-bad-args.md
+      data:
+        expected: alias \`cat deploy.txt\` $GITHUB_SHA
+  - type: respond
+    with: deployed-and-aliased.md
     data:
       url: 'https://%payload.after%.now.sh/'
+
+- title: Run the aliased deployment
+  description: Run the aliased deployment
+  event: check_run.completed
+  actions:
+  - type: gate
+    every: true
+    gates:
+    - left: '%payload.check_run.external_id%'
+      operator: ===
+      right: actions/zeit-now@master
+    - left: '%payload.check_run.status%'
+      operator: ===
+      right: completed
+    - left: '%payload.check_run.name%'
+      operator: ===
+      right: alias # we validated this in an earlier step
+  - type: gate
+    left: '%payload.check_run.conclusion%'
+    operator: ===
+    right: success
+    else:
+    - type: respond
+      issue: Improve the deployment workflow
+      with: e-action-didnt-run.md
+  - type: createReview
+    body: merge-aliased.md
+    event: APPROVE
+    pullRequest: Improve the deployment workflow
+
 
 #12
 - title: Merge your improved deployment workflow
