@@ -20,7 +20,7 @@ We'll let you do this one mostly on your own and we'll check in at the end.
     - `PHONE`: your phone number, the number you wish to notify
 1. In the **args** field we'll enter the body of the message, I suggest:
     ```
-    $PHONE 🚀 A deployment just ocurred at https://$GITHUB_SHA.now.sh/
+    $PHONE A deployment just ocurred at https://$GITHUB_SHA.now.sh/ :)
     ```
 1. Click **Done**
 1. Click **Start commit** on the top right
