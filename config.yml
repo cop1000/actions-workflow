@@ -103,10 +103,14 @@ steps:
       right: jessfraz/branch-cleanup-action@master
     - left: '%payload.check_run.status%'
       operator: ===
-      right: compeleted
-    - left: '%payload.check_run.conclusion%'
-      operator: ===
-      right: success
+      right: completed
+  - type: gate
+    left: '%payload.check_run.conclusion%'
+    operator: ===
+    right: success
+    else:
+    - type: respond
+      with: e-action-didnt-run.md
   - type: createIssue
     title: Create a deployment workflow
     body: 04.1_deployment-workflow.md
