@@ -118,9 +118,13 @@ steps:
       operator: ===
       right: completed
   - type: gate
-    left: '%payload.check_run.conclusion%'
-    operator: ===
-    right: success
+    gates:
+    - left: '%payload.check_run.conclusion%'
+      operator: ===
+      right: success
+    - left: '%payload.check_run.conclusion%'
+      operator: ===
+      right: neutral
     else:
     - type: respond
       issue: Add branch cleanup workflow
