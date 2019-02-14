@@ -214,20 +214,22 @@ steps:
   event: check_run.completed
   actions:
   - type: gate
-    left: '%payload.check_run.external_id%'
-    operator: ===
-    right: actions/zeit-now@master
-    # TODO: use multiple gates and don't act on pending checks
+    every: true
+    gates:
+    - left: '%payload.check_run.external_id%'
+      operator: ===
+      right: actions/zeit-now@master
+    - left: '%payload.check_run.status%'
+      operator: ===
+      right: completed
   - type: gate
     left: '%payload.check_run.conclusion%'
     operator: ===
     right: success
     else:
     - type: respond
-      issue: '%payload.check_run.pull_requests.0.number%'
-      with: 03.1_e-no-run.md
-      data:
-        repo: '%payload.repository.html_url%'
+      issue: Add branch cleanup workflow
+      with: e-action-didnt-run.md
   - type: createReview
     body: 07.0_deployed.md
     event: APPROVE
