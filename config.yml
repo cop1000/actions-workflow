@@ -138,7 +138,7 @@ steps:
     body: 04.1_deployment-workflow.md
     action_id: deployIssue
     data:
-      url: '%payload.repository.html_url%/edit/master/.github/main.workflow&flow=1'
+      url: '%payload.repository.html_url%/edit/master/.github/main.workflow'
   - type: createReview
     pullRequest: Add branch cleanup workflow
     body: 04.0_branch-cleaned-up.md
@@ -264,7 +264,7 @@ steps:
     body: improve-deployment.md
     action_id: improvementIssue
     data:
-      url: '%payload.repository.html_url%/edit/master/.github/main.workflow&flow=1'
+      url: '%payload.repository.html_url%/edit/master/.github/main.workflow'
   - type: respond
     with: goto-improvement.md
     data:
@@ -434,7 +434,7 @@ steps:
     body: notify.md
     action_id: improvementIssue
     data:
-      url: '%payload.repository.html_url%/edit/master/.github/main.workflow&flow=1'
+      url: '%payload.repository.html_url%/edit/master/.github/main.workflow'
   - type: respond
     with: goto-improvement.md
     data:
