@@ -396,7 +396,6 @@ steps:
     event: APPROVE
     pullRequest: Improve the deployment workflow
 
-
 #12
 - title: Merge your improved deployment workflow
   description: Merged your improved deployment workflow
@@ -418,6 +417,27 @@ steps:
   description: Send a deployment notification
   event: pull_request.opened
   actions:
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: 'uses = "nexmo-community/nexmo-sms-action@master"'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-wrong-action.md
+      data:
+        expected: nexmo-community/nexmo-sms-action@master
+  - type: gate
+    left: '/^(?=.*"NEXMO_API_KEY",*)(?=.*"NEXMO_API_SECRET",*)(?=.*"NEXMO_NUMBER",*)(?=.*"PHONE",*).*$/gm'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-no-token.md
+      data:
+        expected: NEXMO_API_KEY, NEXMO_API_SECRET, NEXMO_NUMBER, and PHONE
   - type: createReview
     body: notified.md
     event: APPROVE
