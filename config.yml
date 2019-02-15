@@ -116,6 +116,7 @@ steps:
     pullRequest: Add branch cleanup workflow
     action_id: branchCleanupPR
   - type: gate
+    every: true
     gates:
     - left: '%payload.check_run.head_sha%'
       operator: ===
