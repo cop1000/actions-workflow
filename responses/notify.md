@@ -23,7 +23,7 @@ We'll let you do this one mostly on your own and we'll check in at the end.
 1. Click **Start commit** on the top right
 1. Enter a commit message, select Create a new branch, and click **Commit new file**
 1. On the Open a pull request page, click **Create pull request**
-1. Title the pull request: **Add deployment notification**
+1. Title the pull request: `Add deployment notification`
 
 <hr>
 <h3 align="center">I'll respond in your new pull request with your next steps.</h3>
