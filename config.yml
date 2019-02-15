@@ -20,7 +20,7 @@ before:
 # 2. PR: Add branch cleanup workflow
 # 3. Issue: Create a deployment workflow
 # 4. PR: Add deployment workflow
-# 5. Issue: Improve the deployment workflow
+# 5. Issue: Improve the deployment process
 # 6. PR: Improve the deployment workflow
 # 7. Issue: Notify on deployment
 # 8. PR: Add deployment notification
@@ -260,7 +260,7 @@ steps:
       operator: ===
       right: Add deployment workflow
   - type: createIssue
-    title: Improve the deployment function
+    title: Improve the deployment process
     body: improve-deployment.md
     action_id: improvementIssue
     data:
