@@ -245,7 +245,12 @@ steps:
   event: pull_request.closed
   actions:
   - type: gate
-    left: '%payload.pull_request.merged%'
+    every: true
+    gates:
+    - left: '%payload.pull_request.merged%'
+    - left: '%payload.pull_request.title%'
+      operator: ===
+      right: Add deployment workflow
   - type: createIssue
     title: Improve the deployment function
     body: improve-deployment.md
@@ -402,7 +407,12 @@ steps:
   event: pull_request.closed
   actions:
   - type: gate
-    left: '%payload.pull_request.merged%'
+    every: true
+    gates:
+    - left: '%payload.pull_request.merged%'
+    - left: '%payload.pull_request.title%'
+      operator: ===
+      right: Improved the deployment workflow
   - type: createIssue
     title: Notify on deployment
     body: notify.md
@@ -448,7 +458,12 @@ steps:
   event: pull_request.closed
   actions:
   - type: gate
-    left: '%payload.pull_request.merged%'
+    every: true
+    gates:
+    - left: '%payload.pull_request.merged%'
+    - left: '%payload.pull_request.title%'
+      operator: ===
+      right: Add deployment notification
   - type: createIssue
     title: Congratulations
     body: congratulations.md
