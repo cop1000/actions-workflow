@@ -80,7 +80,7 @@ steps:
   - type: respond
     with: 01.0_add-action.md
     data:
-      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=%payload.repository.full_name%/pull/%payload.number%'
+      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=/%payload.repository.full_name%/pull/%payload.number%'
 
 # 2
 - title: Add the branch cleanup action
@@ -198,7 +198,7 @@ steps:
   - type: respond
     with: 05.0_add-secret.md
     data:
-      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=%payload.repository.full_name%/pull/%payload.number%'
+      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=/%payload.repository.full_name%/pull/%payload.number%'
 
 # 5
 - title: Store a secret on your GitHub repository
@@ -311,7 +311,7 @@ steps:
   - type: respond
     with: explain-args.md
     data:
-      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=%payload.repository.full_name%/pull/%payload.number%'
+      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=/%payload.repository.full_name%/pull/%payload.number%'
 
 # 9
 - title: Chain actions in a workflow
@@ -342,7 +342,7 @@ steps:
   - type: respond
     with: capture-url.md
     data:
-      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=%payload.repository.full_name%/pull/%payload.number%'
+      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=/%payload.repository.full_name%/pull/%payload.number%'
 
 # 10
 - title: Capture the output from an existing action
@@ -364,7 +364,7 @@ steps:
   - type: respond
     with: alias-url.md
     data:
-      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=%payload.repository.full_name%/pull/%payload.number%'
+      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=/%payload.repository.full_name%/pull/%payload.number%'
 
 #11
 - title: Alias the deployment
