@@ -112,17 +112,14 @@ steps:
   # this check_run is safe since the PR would've been opened long ago
   event: check_run.completed
   actions:
-  - type: gate
-    every: true
-    gates:
-    - left: '%payload.check_run.external_id%'
-      operator: ===
-      right: jessfraz/branch-cleanup-action@master
-    - left: '%payload.check_run.status%'
-      operator: ===
-      right: completed
+  - type: getPullRequest
+    pullRequest: Add branch cleanup workflow
+    action_id: branchCleanupPR
   - type: gate
     gates:
+    - left: '%payload.check_run.head_sha%'
+      operator: ===
+      right: '%actions.branchCleanupPR.data.head.sha%'
     - left: '%payload.check_run.conclusion%'
       operator: ===
       right: success
@@ -225,9 +222,15 @@ steps:
   description: Deploy on Zeit Now
   event: check_run.completed
   actions:
+  - type: getPullRequest
+    pullRequest: Add deployment workflow
+    action_id: deploymentPR
   - type: gate
     every: true
     gates:
+    - left: '%payload.check_run.head_sha%'
+      operator: ===
+      right: '%actions.deploymentPR.data.head.sha%'
     - left: '%payload.check_run.external_id%'
       operator: ===
       right: actions/zeit-now@master
@@ -392,9 +395,15 @@ steps:
   description: Run the aliased deployment
   event: check_run.completed
   actions:
+  - type: getPullRequest
+    pullRequest: Improve the deployment workflow
+    action_id: deploymentPR
   - type: gate
     every: true
     gates:
+    - left: '%payload.check_run.head_sha%'
+      operator: ===
+      right: '%actions.deploymentPR.data.head.sha%'
     - left: '%payload.check_run.external_id%'
       operator: ===
       right: actions/zeit-now@master
