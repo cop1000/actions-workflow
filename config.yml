@@ -121,6 +121,14 @@ steps:
     - left: '%payload.check_run.head_sha%'
       operator: ===
       right: '%actions.branchCleanupPR.data.head.sha%'
+    - left: '%payload.check_run.external_id%'
+      operator: ===
+      right: jessfraz/branch-cleanup-action@master
+    - left: '%payload.check_run.status%'
+      operator: ===
+      right: completed
+  - type: gate
+    gates:
     - left: '%payload.check_run.conclusion%'
       operator: ===
       right: success
