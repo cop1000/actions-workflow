@@ -468,7 +468,7 @@ steps:
     title: Congratulations
     body: congratulations.md
     action_id: congratsIssue
-  - title: respond
+  - type: respond
     with: goto-congratulations.md
     data:
       url: '%actions.congratsIssue.data.html_url%'
