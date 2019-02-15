@@ -461,8 +461,29 @@ steps:
 # 13
 - title: Send a deployment notification
   description: Send a deployment notification
-  event: pull_request.opened
+  event: pull_request
   actions:
+  - type: gate
+    gates:
+    - left: '%payload.action%'
+      operator: ===
+      right: opened
+    - left: '%payload.action%'
+      operator: ===
+      right: edited
+    - left: '%payload.action%'
+      operator: ===
+      right: synchronize
+  - type: gate
+    left: '%payload.pull_request.title%'
+    operator: ===
+    right: Add deployment notification
+    else:
+    - type: respond
+      with: e-pr-title.md
+      data:
+        expected: Add deployment notification
+        got: '%payload.pull_request.title%'
   - type: getFileContents
     action_id: fileContents
     filename: '.github/main.workflow'
