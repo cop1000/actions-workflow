@@ -496,15 +496,15 @@ steps:
       with: e-wrong-action.md
       data:
         expected: nexmo-community/nexmo-sms-action@master
-  - type: gate
-    left: '/^(?=.*"NEXMO_API_KEY",*)(?=.*"NEXMO_API_SECRET",*)(?=.*"NEXMO_NUMBER",*)(?=.*"PHONE",*).*$/gm'
-    operator: test
-    right: '%actions.fileContents%'
-    else:
-    - type: respond
-      with: e-no-token.md
-      data:
-        expected: NEXMO_API_KEY, NEXMO_API_SECRET, NEXMO_NUMBER, and PHONE
+  # - type: gate
+  #   left: '/^(?=.*"NEXMO_API_KEY",*)(?=.*"NEXMO_API_SECRET",*)(?=.*"NEXMO_NUMBER",*)(?=.*"PHONE",*).*$/gm'
+  #   operator: test
+  #   right: '%actions.fileContents%'
+  #   else:
+  #   - type: respond
+  #     with: e-no-token.md
+  #     data:
+  #       expected: NEXMO_API_KEY, NEXMO_API_SECRET, NEXMO_NUMBER, and PHONE
   - type: createReview
     body: notified.md
     event: APPROVE
