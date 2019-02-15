@@ -4,10 +4,7 @@ We'll let you do this one mostly on your own and we'll check in at the end.
 
 ### :keyboard: Activity: Use an action to send an SMS notification on deployment
 
-1. Click on the **Code** tab
-1. Click **.github**
-1. Click on **main.workflow**
-1. Click the pencil to edit
+1. [Edit `.github/main.workflow`]({{ url }}) on the master branch.
 1. On the side bar, select your deployment workflow.
 1. Drag the connector from the alias action to the new action block.
 1. In the Choose action field, type `nexmo-community/nexmo-sms-action@master`

@@ -2,10 +2,7 @@ It's now time to improve the deployment workflow. The first thing we'll do is pa
 
 ### :keyboard: Activity: Use environment variables as part of an action
 
-1. Click on the **Code** tab
-1. Click **.github**
-1. Click on **main.workflow**
-1. Click the pencil to edit
+1. [Edit `.github/main.workflow`]({{ url }}) on the master branch.
 1. On the side bar, select your deployment workflow.
 1. Click **edit** in the zeit-now action.
 1. In the **args** field, enter: `-e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR`
