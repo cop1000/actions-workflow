@@ -438,7 +438,7 @@ steps:
     - left: '%payload.pull_request.merged%'
     - left: '%payload.pull_request.title%'
       operator: ===
-      right: Improved the deployment workflow
+      right: Improve the deployment workflow
   - type: createIssue
     title: Notify on deployment
     body: notify.md
