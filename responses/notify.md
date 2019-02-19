@@ -1,6 +1,16 @@
 One of the best things about defining workflow with GitHub Actions is the ability to use multiple services in a single place. Let's practice this by sending yourself an SMS notification when a deployment occurs.
 
-We'll let you do this one mostly on your own and we'll check in at the end.
+We'll let you do this one mostly on your own and we'll check in at the end. First though, you need to create an account on Nexmo and grab the necessary keys.
+
+### :keyboard: Activity part 1: Get tokens for Nexmo
+
+On Zeit:
+1. [Create an account on Nexmo](https://dashboard.nexmo.com/sign-up), if you don't already have one. You can signup with GitHub if you'd like.
+1. Navigate to your [SMS Getting started guide](https://dashboard.nexmo.com/getting-started/#/sms) and jot down each of the following items:
+    - API key will be used on GitHub as `NEXMO_API_KEY`
+    - API secret will be used on GitHub as `NEXMO_API_SECRET`
+1. Navigate to [Numbers](https://dashboard.nexmo.com/your-numbers) section, jot down:
+    - The Number assigned to you by Nexmo will be used on GitHub as `NEXMO_NUMBER`
 
 ### :keyboard: Activity: Use an action to send an SMS notification on deployment
 
