@@ -1,0 +1,1 @@
+Go to the [last issue]({{ url }}).

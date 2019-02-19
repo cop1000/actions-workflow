@@ -4,8 +4,7 @@ When the deployment action runs, you may have noticed that it returns the deploy
 
 ### :keyboard: Activity: Capture the output from an existing action
 
-1. Click on the **Files changed** tab of this pull request.
-1. Click on the pencil to edit the `main.workflow` file.
+1. [Edit the `main.workflow` file]({{ url }}) on this branch.
 1. On the side bar, select your deployment workflow.
 1. Click **edit** in your deployment action.
 1. In the **args** field, add `deploy > deploy.txt`.

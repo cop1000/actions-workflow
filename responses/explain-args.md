@@ -12,8 +12,7 @@ By now, you must be getting pretty tired of digging into the Actions tab to get 
 
 ### :keyboard: Activity: Chain actions in a workflow
 
-1. Click on the **Files changed** tab of this pull request.
-1. Click on the pencil to edit the `main.workflow` file.
+1. [Edit the `main.workflow` file]({{ url }}) on this branch.
 1. On the side bar, select your deployment workflow.
 1. Drag the connector from the deployment action block to the outlined action block for a new action
 1. In the Choose action field, type `actions/zeit-now@master` once again

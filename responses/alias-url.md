@@ -2,8 +2,7 @@ We've now captured the output from the deployment action, although we can't see 
 
 ### :keyboard: Activity: Alias the deployment
 
-1. Click on the **Files changed** tab of this pull request.
-1. Click on the pencil to edit the `main.workflow` file.
+1. [Edit the `main.workflow` file]({{ url }}) on this branch.
 1. On the side bar, select your deployment workflow.
 1. Click **edit** in your alias action.
 1. In the **args** field, add <code>\`cat deploy.txt\` $GITHUB_SHA</code>.

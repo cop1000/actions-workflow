@@ -12,13 +12,15 @@ before:
   - type: createIssue
     title: Welcome
     body: 00.0_welcome.md
+    data:
+      url: '%payload.repository.html_url%/new/master?filename=.github/main.workflow&flow=1'
     
 # Repo artifacts:
 # 1. Issue: Welcome
 # 2. PR: Add branch cleanup workflow
 # 3. Issue: Create a deployment workflow
 # 4. PR: Add deployment workflow
-# 5. Issue: Improve the deployment workflow
+# 5. Issue: Improve the deployment process
 # 6. PR: Improve the deployment workflow
 # 7. Issue: Notify on deployment
 # 8. PR: Add deployment notification
@@ -77,6 +79,8 @@ steps:
         expected: pull_request
   - type: respond
     with: 01.0_add-action.md
+    data:
+      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=/%payload.repository.full_name%/pull/%payload.number%'
 
 # 2
 - title: Add the branch cleanup action
@@ -108,9 +112,15 @@ steps:
   # this check_run is safe since the PR would've been opened long ago
   event: check_run.completed
   actions:
+  - type: getPullRequest
+    pullRequest: Add branch cleanup workflow
+    action_id: branchCleanupPR
   - type: gate
     every: true
     gates:
+    - left: '%payload.check_run.head_sha%'
+      operator: ===
+      right: '%actions.branchCleanupPR.data.head.sha%'
     - left: '%payload.check_run.external_id%'
       operator: ===
       right: jessfraz/branch-cleanup-action@master
@@ -133,6 +143,8 @@ steps:
     title: Create a deployment workflow
     body: 04.1_deployment-workflow.md
     action_id: deployIssue
+    data:
+      url: '%payload.repository.html_url%/edit/master/.github/main.workflow'
   - type: createReview
     pullRequest: Add branch cleanup workflow
     body: 04.0_branch-cleaned-up.md
@@ -191,6 +203,8 @@ steps:
         expected: actions/zeit-now@master
   - type: respond
     with: 05.0_add-secret.md
+    data:
+      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=/%payload.repository.full_name%/pull/%payload.number%'
 
 # 5
 - title: Store a secret on your GitHub repository
@@ -217,9 +231,15 @@ steps:
   description: Deploy on Zeit Now
   event: check_run.completed
   actions:
+  - type: getPullRequest
+    pullRequest: Add deployment workflow
+    action_id: deploymentPR
   - type: gate
     every: true
     gates:
+    - left: '%payload.check_run.head_sha%'
+      operator: ===
+      right: '%actions.deploymentPR.data.head.sha%'
     - left: '%payload.check_run.external_id%'
       operator: ===
       right: actions/zeit-now@master
@@ -245,11 +265,18 @@ steps:
   event: pull_request.closed
   actions:
   - type: gate
-    left: '%payload.pull_request.merged%'
+    every: true
+    gates:
+    - left: '%payload.pull_request.merged%'
+    - left: '%payload.pull_request.title%'
+      operator: ===
+      right: Add deployment workflow
   - type: createIssue
-    title: Improve the deployment function
+    title: Improve the deployment process
     body: improve-deployment.md
     action_id: improvementIssue
+    data:
+      url: '%payload.repository.html_url%/edit/master/.github/main.workflow'
   - type: respond
     with: goto-improvement.md
     data:
@@ -295,6 +322,8 @@ steps:
         expected: -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR
   - type: respond
     with: explain-args.md
+    data:
+      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=/%payload.repository.full_name%/pull/%payload.number%'
 
 # 9
 - title: Chain actions in a workflow
@@ -324,6 +353,8 @@ steps:
         expected: alias
   - type: respond
     with: capture-url.md
+    data:
+      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=/%payload.repository.full_name%/pull/%payload.number%'
 
 # 10
 - title: Capture the output from an existing action
@@ -344,6 +375,8 @@ steps:
         expected: -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR deploy > deploy.txt
   - type: respond
     with: alias-url.md
+    data:
+      url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=/%payload.repository.full_name%/pull/%payload.number%'
 
 #11
 - title: Alias the deployment
@@ -371,9 +404,15 @@ steps:
   description: Run the aliased deployment
   event: check_run.completed
   actions:
+  - type: getPullRequest
+    pullRequest: Improve the deployment workflow
+    action_id: deploymentPR
   - type: gate
     every: true
     gates:
+    - left: '%payload.check_run.head_sha%'
+      operator: ===
+      right: '%actions.deploymentPR.data.head.sha%'
     - left: '%payload.check_run.external_id%'
       operator: ===
       right: actions/zeit-now@master
@@ -396,18 +435,24 @@ steps:
     event: APPROVE
     pullRequest: Improve the deployment workflow
 
-
 #12
 - title: Merge your improved deployment workflow
   description: Merged your improved deployment workflow
   event: pull_request.closed
   actions:
   - type: gate
-    left: '%payload.pull_request.merged%'
+    every: true
+    gates:
+    - left: '%payload.pull_request.merged%'
+    - left: '%payload.pull_request.title%'
+      operator: ===
+      right: Improve the deployment workflow
   - type: createIssue
     title: Notify on deployment
     body: notify.md
     action_id: improvementIssue
+    data:
+      url: '%payload.repository.html_url%/edit/master/.github/main.workflow'
   - type: respond
     with: goto-improvement.md
     data:
@@ -416,8 +461,50 @@ steps:
 # 13
 - title: Send a deployment notification
   description: Send a deployment notification
-  event: pull_request.opened
+  event: pull_request
   actions:
+  - type: gate
+    gates:
+    - left: '%payload.action%'
+      operator: ===
+      right: opened
+    - left: '%payload.action%'
+      operator: ===
+      right: edited
+    - left: '%payload.action%'
+      operator: ===
+      right: synchronize
+  - type: gate
+    left: '%payload.pull_request.title%'
+    operator: ===
+    right: Add deployment notification
+    else:
+    - type: respond
+      with: e-pr-title.md
+      data:
+        expected: Add deployment notification
+        got: '%payload.pull_request.title%'
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
+  - type: gate
+    left: 'uses = "nexmo-community/nexmo-sms-action@master"'
+    operator: test
+    right: '%actions.fileContents%'
+    else:
+    - type: respond
+      with: e-wrong-action.md
+      data:
+        expected: nexmo-community/nexmo-sms-action@master
+  # - type: gate
+  #   left: '/^(?=.*"NEXMO_API_KEY",*)(?=.*"NEXMO_API_SECRET",*)(?=.*"NEXMO_NUMBER",*)(?=.*"PHONE",*).*$/gm'
+  #   operator: test
+  #   right: '%actions.fileContents%'
+  #   else:
+  #   - type: respond
+  #     with: e-no-token.md
+  #     data:
+  #       expected: NEXMO_API_KEY, NEXMO_API_SECRET, NEXMO_NUMBER, and PHONE
   - type: createReview
     body: notified.md
     event: APPROVE
@@ -428,10 +515,20 @@ steps:
   event: pull_request.closed
   actions:
   - type: gate
-    left: '%payload.pull_request.merged%'
+    every: true
+    gates:
+    - left: '%payload.pull_request.merged%'
+    - left: '%payload.pull_request.title%'
+      operator: ===
+      right: Add deployment notification
   - type: createIssue
     title: Congratulations
     body: congratulations.md
+    action_id: congratsIssue
+  - type: respond
+    with: goto-congratulations.md
+    data:
+      url: '%actions.congratsIssue.data.html_url%'
 
     
 
