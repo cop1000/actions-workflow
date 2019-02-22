@@ -379,35 +379,12 @@ steps:
       data:
         expected: -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR deploy > deploy.txt
   - type: respond
-    with: alias-url.md
+    with: sms-with-url.md
     data:
       url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=/%payload.repository.full_name%/pull/%payload.number%'
 
-# Will bring this back when https://github.com/github/learning-lab/issues/999 is resolved
-# #11
-# - title: Alias the deployment
-#   description: Alias the deployment
-#   event: pull_request.synchronize
-#   actions:
-#   - type: getFileContents
-#     action_id: fileContents
-#     filename: '.github/main.workflow'
-#   - type: gate
-#     left: '/args = "alias `cat deploy.txt` \$GITHUB_SHA"/g'
-#     operator: test
-#     right: '%actions.fileContents%'
-#     else:
-#     - type: respond
-#       with: e-bad-args.md
-#       data:
-#         expected: alias \`cat deploy.txt\` $GITHUB_SHA
-#   - type: respond
-#     with: deployed-and-aliased.md
-#     data:
-#       url: 'https://%payload.after%.now.sh/'
-
-- title: Run the aliased deployment
-  description: Run the aliased deployment
+- title: Send an SMS notification on deployment
+  description: Send an SMS notification on deployment
   event: check_run.completed
   actions:
   - type: getPullRequest
@@ -421,13 +398,10 @@ steps:
       right: '%actions.deploymentPR.data.head.sha%'
     - left: '%payload.check_run.external_id%'
       operator: ===
-      right: actions/zeit-now@master
+      right: nexmo-community/nexmo-sms-action@master
     - left: '%payload.check_run.status%'
       operator: ===
       right: completed
-    - left: '%payload.check_run.name%'
-      operator: ===
-      right: alias # we validated this in an earlier step
   - type: gate
     left: '%payload.check_run.conclusion%'
     operator: ===
@@ -440,6 +414,9 @@ steps:
     body: merge-aliased.md
     event: APPROVE
     pullRequest: Improve the deployment workflow
+  - type: createReview
+    body: notified.md
+    event: APPROVE
 
 #12
 - title: Merge your improved deployment workflow
@@ -454,12 +431,10 @@ steps:
       operator: ===
       right: Improve the deployment workflow
   - type: createIssue
-    title: Notify on deployment
-    body: notify.md
-    action_id: improvementIssue
-    data:
-      url: '%payload.repository.html_url%/edit/master/.github/main.workflow'
+    title: Congratulations
+    body: congratulations.md
+    action_id: congratsIssue
   - type: respond
-    with: goto-improvement.md
+    with: goto-congratulations.md
     data:
-      url: '%actions.improvementIssue.data.html_url%'
+      url: '%actions.congratsIssue.data.html_url%'
