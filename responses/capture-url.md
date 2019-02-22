@@ -1,6 +1,4 @@
-The deployment action will succeed, but the alias action will fail. This is because the alias action requires a [source and target url](https://zeit.co/docs/v1/features/aliases/#creating-aliases), which we've not supplied.
-
-When the deployment action runs, you may have noticed that it returns the deployment URL in the log output. We can redirect this output to a file by accessing the Docker container running the action.
+You should get a notification soon! But it won't include the URL of your deployment. That's because you haven't supplied the Nexmo SMS action with the URL. To do this, we need to save that URL in the deploy action, and access it again in the SMS action. This is possible as a result of the runtime environment that is created when actions run in the Docker container.  
 
 ### :keyboard: Activity: Capture the output from an existing action
 
