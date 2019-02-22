@@ -413,10 +413,10 @@ steps:
   - type: createReview
     body: merge-aliased.md
     event: APPROVE
-    pullRequest: Improve the deployment workflow
   - type: createReview
     body: notified.md
     event: APPROVE
+    pullRequest: Improve the deployment workflow
 
 #12
 - title: Merge your improved deployment workflow
