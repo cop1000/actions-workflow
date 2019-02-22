@@ -322,6 +322,8 @@ steps:
         expected: -e GITHUB_SHA=$GITHUB_SHA -e GITHUB_ACTOR=$GITHUB_ACTOR
   - type: respond
     with: explain-args.md
+  - type: respond
+    with: notify.md
     data:
       url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=/%payload.repository.full_name%/pull/%payload.number%'
 
