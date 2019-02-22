@@ -5,10 +5,10 @@ We've now captured the output from the deployment action, although we can't see 
 1. [Edit the `main.workflow` file]({{ url }}) on this branch.
 1. On the side bar, select your deployment workflow.
 1. Click **edit** in your `sms notify` action.
-1. In the **args** field, add a </code>`cat deploy.txt`</code> to the `args` field.
+1. In the **args** field, add a <code>`cat deploy.txt`</code> to the `args` field.
     - Remember that this field previously contained your meesage, so the complete arguments will be:
     ```shell
-    $PHONE A deployment just occurred at `cat deploy.txt` :)
+    $PHONE A deployment just occurred at `cat deploy.txt` check it out
     ```
 1. Click **Done**.
 1. Click **Start commit** on the top right.

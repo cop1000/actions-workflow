@@ -4,6 +4,6 @@ In this case, we passed in arguments with the `-e` option. This allows us to set
 
 When an action runs, some [environment variables are set by GitHub](https://developer.github.com/actions/creating-github-actions/accessing-the-runtime-environment/#environment-variables) and available in the runtime environment. Although these are available in the Docker container, they need to be explicitly passed to Zeit Now if we want our deployed application to make use of them. 
 
-If you examine our newly deployed app, you'll now see that it looks something like this:
+Get your deployment URL by going into the Actions tab. You can then visit it to examine the newly deployed app. You'll see that it now looks something like this:
 
 ![screenshot of deployed web app with confetti](https://user-images.githubusercontent.com/16547949/52747405-b1c97e80-2fb1-11e9-924c-70fb3a37ce14.png)

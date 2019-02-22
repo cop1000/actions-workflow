@@ -1,4 +1,4 @@
-By now, you must be getting pretty tired of digging into the Actions tab to get the deployment URL. One of the best things about defining workflows with GitHub Actions is the ability to use multiple services in a single place to make your life easier. 
+We don't always have to dig into the Actions tab to get the deployment URL, though. One of the best things about defining workflows with GitHub Actions is the ability to use multiple services in a single place to make your life easier. 
 
 Let's practice this by sending yourself an SMS notification when a deployment occurs. You'll need to create an account on Nexmo for this next step. 
 
@@ -25,10 +25,10 @@ On Nexmo:
     - `NEXMO_API_KEY`: the API key provided to you by Nexmo
     - `NEXMO_API_SECRET`: the API secret provided to you by Nexmo
     - `NEXMO_NUMBER`: the phone number provided to you by Nexmo
-    - `PHONE`: your phone number, the number you wish to notify
+    - `PHONE`: your phone number, the number you wish to notify, preceded by the country code
 1. In the **args** field we'll enter the body of the message, I suggest:
     ```
-    $PHONE A deployment just occurred :)
+    $PHONE A deployment just occurred check it out
     ```
 1. Click **Done**.
 1. Click **Start commit** on the top right.
