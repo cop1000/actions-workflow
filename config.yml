@@ -335,24 +335,27 @@ steps:
   - type: getFileContents
     action_id: fileContents
     filename: '.github/main.workflow'
+  - type: getFileContents
+    action_id: fileContents
+    filename: '.github/main.workflow'
   - type: gate
-    left: 'action "alias"'
+    left: 'uses = "nexmo-community/nexmo-sms-action@master"'
     operator: test
     right: '%actions.fileContents%'
     else:
     - type: respond
-      with: e-expected-label.md
+      with: e-wrong-action.md
       data:
-        expected: alias
-  - type: gate
-    left: '/args\s*=\s*"alias"/g'
-    operator: test
-    right: '%actions.fileContents%'
-    else:
-    - type: respond
-      with: e-bad-args.md
-      data:
-        expected: alias
+        expected: nexmo-community/nexmo-sms-action@master
+  # - type: gate
+  #   left: '/^(?=.*"NEXMO_API_KEY",*)(?=.*"NEXMO_API_SECRET",*)(?=.*"NEXMO_NUMBER",*)(?=.*"PHONE",*).*$/gm'
+  #   operator: test
+  #   right: '%actions.fileContents%'
+  #   else:
+  #   - type: respond
+  #     with: e-no-token.md
+  #     data:
+  #       expected: NEXMO_API_KEY, NEXMO_API_SECRET, NEXMO_NUMBER, and PHONE
   - type: respond
     with: capture-url.md
     data:
@@ -460,90 +463,3 @@ steps:
     with: goto-improvement.md
     data:
       url: '%actions.improvementIssue.data.html_url%'
-
-# 13
-- title: Send a deployment notification
-  description: Send a deployment notification
-  event: pull_request
-  actions:
-  - type: gate
-    gates:
-    - left: '%payload.action%'
-      operator: ===
-      right: opened
-    - left: '%payload.action%'
-      operator: ===
-      right: edited
-    - left: '%payload.action%'
-      operator: ===
-      right: synchronize
-  - type: gate
-    left: '%payload.pull_request.title%'
-    operator: ===
-    right: Add deployment notification
-    else:
-    - type: respond
-      with: e-pr-title.md
-      data:
-        expected: Add deployment notification
-        got: '%payload.pull_request.title%'
-  - type: getFileContents
-    action_id: fileContents
-    filename: '.github/main.workflow'
-  - type: gate
-    left: 'uses = "nexmo-community/nexmo-sms-action@master"'
-    operator: test
-    right: '%actions.fileContents%'
-    else:
-    - type: respond
-      with: e-wrong-action.md
-      data:
-        expected: nexmo-community/nexmo-sms-action@master
-  # - type: gate
-  #   left: '/^(?=.*"NEXMO_API_KEY",*)(?=.*"NEXMO_API_SECRET",*)(?=.*"NEXMO_NUMBER",*)(?=.*"PHONE",*).*$/gm'
-  #   operator: test
-  #   right: '%actions.fileContents%'
-  #   else:
-  #   - type: respond
-  #     with: e-no-token.md
-  #     data:
-  #       expected: NEXMO_API_KEY, NEXMO_API_SECRET, NEXMO_NUMBER, and PHONE
-  - type: createReview
-    body: notified.md
-    event: APPROVE
-
-# 14
-- title: Merge the deployment notification
-  description: Merge the deployment notification
-  event: pull_request.closed
-  actions:
-  - type: gate
-    every: true
-    gates:
-    - left: '%payload.pull_request.merged%'
-    - left: '%payload.pull_request.title%'
-      operator: ===
-      right: Add deployment notification
-  - type: createIssue
-    title: Congratulations
-    body: congratulations.md
-    action_id: congratsIssue
-  - type: respond
-    with: goto-congratulations.md
-    data:
-      url: '%actions.congratsIssue.data.html_url%'
-
-    
-
-
-# 9 Access the runtime environment for an action
-#   learner adds the alias action
-
-# 10 Use arguments with an action
-#   learner adds the deploy > deploy.txt argument to deploy action (accessed by alias)
-#   learner adds the alias argument to the alias action
-
-# 11 Notify your phone of a deployment
-#   learner adds nexmo/sms action
-#   learner sets environment variables
-#   learner sets arguments
