@@ -378,27 +378,28 @@ steps:
     data:
       url: '%payload.repository.html_url%/edit/%payload.pull_request.head.ref%/.github/main.workflow?pr=/%payload.repository.full_name%/pull/%payload.number%'
 
-#11
-- title: Alias the deployment
-  description: Alias the deployment
-  event: pull_request.synchronize
-  actions:
-  - type: getFileContents
-    action_id: fileContents
-    filename: '.github/main.workflow'
-  - type: gate
-    left: '/args = "alias `cat deploy.txt` \$GITHUB_SHA"/g'
-    operator: test
-    right: '%actions.fileContents%'
-    else:
-    - type: respond
-      with: e-bad-args.md
-      data:
-        expected: alias \`cat deploy.txt\` $GITHUB_SHA
-  - type: respond
-    with: deployed-and-aliased.md
-    data:
-      url: 'https://%payload.after%.now.sh/'
+# Will bring this back when https://github.com/github/learning-lab/issues/999 is resolved
+# #11
+# - title: Alias the deployment
+#   description: Alias the deployment
+#   event: pull_request.synchronize
+#   actions:
+#   - type: getFileContents
+#     action_id: fileContents
+#     filename: '.github/main.workflow'
+#   - type: gate
+#     left: '/args = "alias `cat deploy.txt` \$GITHUB_SHA"/g'
+#     operator: test
+#     right: '%actions.fileContents%'
+#     else:
+#     - type: respond
+#       with: e-bad-args.md
+#       data:
+#         expected: alias \`cat deploy.txt\` $GITHUB_SHA
+#   - type: respond
+#     with: deployed-and-aliased.md
+#     data:
+#       url: 'https://%payload.after%.now.sh/'
 
 - title: Run the aliased deployment
   description: Run the aliased deployment
